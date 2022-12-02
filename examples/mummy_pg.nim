@@ -1,33 +1,32 @@
-import mummy, waterpark/pg
+import mummy, waterpark/pg, std/db_postgres, std/strutils
 
-# For this example to work you'll need a running Postgres database
-# along with entering the correct connection parameters below.
+# To run and use this example, you'd need to set up the matching Postgres user
+# and table. Kind of a pain. Fortunately, you don't necessarily need to
+# see how creating a Postgres pool works and how you can use it in an HTTP
+# request handler.
 
-# While this may make running the example more challenging, it remains
-# a simple way to see how to use the Postgres pool.
+let pool = newPgPool(3, "localhost", "pguser", "dietcoke", "test")
 
-let pool = newPgPool(3, "localhost", "", "", "")
+proc handler(request: Request) =
+  case request.uri:
+  of "/":
+    if request.httpMethod == "GET":
+      var count: int
 
-# proc handler(request: Request) =
-#   case request.uri:
-#   of "/":
-#     if request.httpMethod == "GET":
-#       var count: int
+      let conn = pool.take() # Take a Postgres connection from the pool
+      try:
+        count = parseInt(conn.getValue(sql"select count from table1 limit 1"))
+      finally:
+        pool.add(conn) # Return the postgres connection to the pool
 
-#       let conn = pool.take() # Take a Postgres connection from the pool
-#       try:
-#         discard
-#       finally:
-#         pool.add(conn) # Return the postgres connection to the pool
+      var headers: HttpHeaders
+      headers["Content-Type"] = "text/plain"
+      request.respond(200, headers, "Count: " & $count & "\n")
+    else:
+      request.respond(405)
+  else:
+    request.respond(404)
 
-#       var headers: HttpHeaders
-#       headers["Content-Type"] = "text/plain"
-#       request.respond(200, headers, $count)
-#     else:
-#       request.respond(405)
-#   else:
-#     request.respond(404)
-
-# let server = newServer(handler)
-# echo "Serving on http://localhost:8080"
-# server.serve(Port(8080))
+let server = newServer(handler)
+echo "Serving on http://localhost:8080"
+server.serve(Port(8080))

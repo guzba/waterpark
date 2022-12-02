@@ -15,10 +15,34 @@ I intend to add many more pools soon, such as for MySql, SQLite, Redis etc.
 A great use-case for these thread-safe pools is for database connections when running
 a multithreaded HTTP server like [Mummy](https://github.com/guzba/mummy).
 
-## Example
+## Example Postgres pool + Mummy HTTP request handler
 
 ```nim
-discard
+let pool = newPgPool(3, "localhost", "pguser", "dietcoke", "test")
+
+proc handler(request: Request) =
+  case request.uri:
+  of "/":
+    if request.httpMethod == "GET":
+      var count: int
+
+      let conn = pool.take() # Take a Postgres connection from the pool
+      try:
+        count = parseInt(conn.getValue(sql"select count from table1 limit 1"))
+      finally:
+        pool.add(conn) # Return the postgres connection to the pool
+
+      var headers: HttpHeaders
+      headers["Content-Type"] = "text/plain"
+      request.respond(200, headers, "Count: " & $count & "\n")
+    else:
+      request.respond(405)
+  else:
+    request.respond(404)
+
+let server = newServer(handler)
+echo "Serving on http://localhost:8080"
+server.serve(Port(8080))
 ```
 
 ## Testing
