@@ -15,7 +15,9 @@ I intend to add many more pools soon, such as for MySQL, SQLite, Redis etc.
 A great use-case for these thread-safe pools is for database connections when running
 a multithreaded HTTP server like [Mummy](https://github.com/guzba/mummy).
 
-## Example Postgres pool + Mummy HTTP request handler
+## Example
+
+The following example shows a Postgres database connection pool being used in a Mummy HTTP request handler.
 
 ```nim
 let pool = newPgPool(3, "localhost", "pguser", "dietcoke", "test")
