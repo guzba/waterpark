@@ -20,7 +20,7 @@ a multithreaded HTTP server like [Mummy](https://github.com/guzba/mummy).
 The following example shows a Postgres database connection pool being used in a Mummy HTTP request handler.
 
 ```nim
-let pool = newPgPool(3, "localhost", "pguser", "dietcoke", "test")
+let pool = newPostgresPool(3, "localhost", "pguser", "dietcoke", "test")
 
 proc handler(request: Request) =
   case request.uri:
