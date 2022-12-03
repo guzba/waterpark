@@ -1,11 +1,11 @@
-import mummy, waterpark/pg, std/db_postgres, std/strutils
+import mummy, waterpark/postgres, std/strutils
 
 # To run and use this example, you'd need to set up the matching Postgres user
 # and table. Kind of a pain. Fortunately, you don't necessarily need to
 # see how creating a Postgres pool works and how you can use it in an HTTP
 # request handler.
 
-let pool = newPgPool(3, "localhost", "pguser", "dietcoke", "test")
+let pool = newPostgresPool(3, "localhost", "pguser", "dietcoke", "test")
 
 proc handler(request: Request) =
   case request.uri:

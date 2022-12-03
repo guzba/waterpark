@@ -32,7 +32,7 @@ proc handler(request: Request) =
       try:
         count = parseInt(conn.getValue(sql"select count from table1 limit 1"))
       finally:
-        pool.add(conn) # Return the Postgres connection to the pool
+        pool.add(conn) # Return the postgres connection to the pool
 
       var headers: HttpHeaders
       headers["Content-Type"] = "text/plain"
