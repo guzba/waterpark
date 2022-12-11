@@ -8,9 +8,13 @@
 
 Waterpark provides thread-safe object pools and a generic `Pool[T]` to create your own.
 
-Waterpark is brand new so right now there is only one built-in pool, `waterpark/postgres`, which provides a Postgres database connection pool.
+Currently there are 3 built-in pools:
 
-I intend to add many more pools soon, such as for MySQL, SQLite, Redis etc.
+* `import waterpark/postgres`
+* `import waterpart/msyql`
+* `import waterpart/sqlite`
+
+Adding more pools is planned, including for Redis etc.
 
 A great use-case for these thread-safe pools is for database connections when running
 a multithreaded HTTP server like [Mummy](https://github.com/guzba/mummy).
@@ -20,31 +24,27 @@ a multithreaded HTTP server like [Mummy](https://github.com/guzba/mummy).
 The following example shows a Postgres database connection pool being used in a Mummy HTTP request handler.
 
 ```nim
+import mummy, mummy/routers, waterpark/postgres, std/strutils
+
 let pool = newPostgresPool(3, "localhost", "pguser", "dietcoke", "test")
 
-proc handler(request: Request) =
-  case request.uri:
-  of "/":
-    if request.httpMethod == "GET":
-      var count: int
+proc indexHandler(request: Request) =
+  var count: int
 
-      let conn = pool.take() # Take a Postgres connection from the pool
-      try:
-        count = parseInt(conn.getValue(sql"select count from table1 limit 1"))
-      finally:
-        pool.add(conn) # Return the Postgres connection to the pool
+  pool.withConn conn:
+    count = parseInt(conn.getValue(sql"select count from table1 limit 1"))
 
-      var headers: HttpHeaders
-      headers["Content-Type"] = "text/plain"
-      request.respond(200, headers, "Count: " & $count & "\n")
-    else:
-      request.respond(405)
-  else:
-    request.respond(404)
+  var headers: HttpHeaders
+  headers["Content-Type"] = "text/plain"
+  request.respond(200, headers, "Count: " & $count & "\n")
 
-let server = newServer(handler)
+var router: Router
+router.get("/", indexHandler)
+
+let server = newServer(router)
 echo "Serving on http://localhost:8080"
 server.serve(Port(8080))
+
 ```
 
 ## Testing
