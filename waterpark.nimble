@@ -1,4 +1,4 @@
-version     = "0.0.0"
+version     = "0.1.0"
 author      = "Ryan Oldenburg"
 description = "Thread-safe object pools"
 license     = "MIT"

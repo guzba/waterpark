@@ -1,25 +1,28 @@
-import ../waterpark, std/db_postgres, std/sequtils, std/locks
+import ../waterpark, std/db_mysql, std/sequtils, std/locks
 
-export db_postgres, borrow, recycle, items
+export db_mysql, borrow, recycle, items
 
-type PostgresPool* = object
+type MySqlPool* = object
   pool: Pool[DbConn]
 
-proc newPostgresPool*(
+proc newMySqlPool*(
   size: int, connection, user, password, database: string
-): PostgresPool =
-  ## Creates a new thead-safe pool of Postgres database connections.
+): MySqlPool =
+  ## Creates a new thead-safe pool of MySQL database connections.
   result.pool = newPool[DbConn]()
   for _ in 0 ..< size:
     result.pool.recycle(open(connection, user, password, database))
 
-proc borrow*(pool: PostgresPool): DbConn {.inline, raises: [], gcsafe.} =
+proc borrow*(pool: MySqlPool): DbConn {.inline, raises: [], gcsafe.} =
   pool.pool.borrow()
 
-proc recycle*(pool: PostgresPool, conn: DbConn) {.inline, raises: [], gcsafe.} =
+proc recycle*(pool: MySqlPool, conn: DbConn) {.inline, raises: [], gcsafe.} =
   pool.pool.recycle(conn)
 
-proc close*(pool: PostgresPool) =
+proc `==`(a, b: DbConn): bool =
+  cast[pointer](a) == cast[pointer](b)
+
+proc close*(pool: MySqlPool) =
   ## Closes the database connections in the pool then deallocates the pool.
   ## All connections should be returned to the pool before it is closed.
   let entries = toSeq(pool.pool.items)
@@ -28,7 +31,7 @@ proc close*(pool: PostgresPool) =
     pool.pool.delete(entry)
   pool.pool.close()
 
-template withConn*(pool: PostgresPool, conn, body) =
+template withConn*(pool: MySqlPool, conn, body) =
   let conn = pool.borrow()
   try:
     body
