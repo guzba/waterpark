@@ -29,8 +29,9 @@ proc close*(pool: PostgresPool) =
   pool.pool.close()
 
 template withConn*(pool: PostgresPool, conn, body) =
-  let conn = pool.borrow()
-  try:
-    body
-  finally:
-    pool.recycle(conn)
+  block:
+    let conn = pool.borrow()
+    try:
+      body
+    finally:
+      pool.recycle(conn)

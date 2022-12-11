@@ -32,8 +32,9 @@ proc close*(pool: MySqlPool) =
   pool.pool.close()
 
 template withConn*(pool: MySqlPool, conn, body) =
-  let conn = pool.borrow()
-  try:
-    body
-  finally:
-    pool.recycle(conn)
+  block:
+    let conn = pool.borrow()
+    try:
+      body
+    finally:
+      pool.recycle(conn)
