@@ -1,3 +1,6 @@
+when not defined(gcArc) and not defined(gcOrc):
+  {.error: "Using --mm:arc or --mm:orc is required by Waterpark.".}
+
 import std/locks
 
 type
