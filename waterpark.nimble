@@ -1,6 +1,6 @@
 version     = "0.1.0"
 author      = "Ryan Oldenburg"
-description = "Thread-safe object pools"
+description = "Thread-safe database connection pools"
 license     = "MIT"
 
 srcDir = "src"
