@@ -34,6 +34,13 @@ proc indexHandler(request: Request) =
   pool.withConn conn:
     count = parseInt(conn.getValue(sql"select count from table1 limit 1"))
 
+  # ^ This is shorthand for:
+  # let conn = pool.borrow() # Take a Postgres connection from the pool
+  # try:
+  #   count = parseInt(conn.getValue(sql"select count from table1 limit 1"))
+  # finally:
+  #   pool.recycle(conn) # Return the Postgres connection to the pool
+
   var headers: HttpHeaders
   headers["Content-Type"] = "text/plain"
   request.respond(200, headers, "Count: " & $count & "\n")
