@@ -53,7 +53,7 @@ echo "Serving on http://localhost:8080"
 server.serve(Port(8080))
 ```
 
-There are more examples in the examples/ directory of this repo.
+There are more examples in the [examples/](https://github.com/guzba/waterpark/tree/master/examples) directory of this repo.
 
 ## Tips
 
