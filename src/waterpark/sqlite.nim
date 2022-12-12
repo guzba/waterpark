@@ -26,7 +26,7 @@ proc close*(pool: SqlitePool) =
     pool.pool.delete(entry)
   pool.pool.close()
 
-template withConn*(pool: SqlitePool, conn, body) =
+template borrowConn*(pool: SqlitePool, conn, body) =
   block:
     let conn = pool.borrow()
     try:

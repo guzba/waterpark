@@ -31,7 +31,7 @@ proc close*(pool: MySqlPool) =
     pool.pool.delete(entry)
   pool.pool.close()
 
-template withConn*(pool: MySqlPool, conn, body) =
+template borrowConn*(pool: MySqlPool, conn, body) =
   block:
     let conn = pool.borrow()
     try:

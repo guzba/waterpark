@@ -28,7 +28,7 @@ proc close*(pool: PostgresPool) =
     pool.pool.delete(entry)
   pool.pool.close()
 
-template withConn*(pool: PostgresPool, conn, body) =
+template borrowConn*(pool: PostgresPool, conn, body) =
   block:
     let conn = pool.borrow()
     try:
