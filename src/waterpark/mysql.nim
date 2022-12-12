@@ -5,6 +5,9 @@ export db_mysql, borrow, recycle, items
 type MySqlPool* = object
   pool: Pool[DbConn]
 
+proc `==`(a, b: DbConn): bool =
+  cast[pointer](a) == cast[pointer](b)
+
 proc close*(pool: MySqlPool) =
   ## Closes the database connections in the pool then deallocates the pool.
   ## All connections should be returned to the pool before it is closed.
@@ -36,10 +39,6 @@ proc borrow*(pool: MySqlPool): DbConn {.inline, raises: [], gcsafe.} =
 
 proc recycle*(pool: MySqlPool, conn: DbConn) {.inline, raises: [], gcsafe.} =
   pool.pool.recycle(conn)
-
-proc `==`(a, b: DbConn): bool =
-  cast[pointer](a) == cast[pointer](b)
-
 
 template withConnnection*(pool: MySqlPool, conn, body) =
   block:

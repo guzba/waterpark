@@ -28,20 +28,20 @@ The following example shows a Postgres database connection pool being used in a 
 ```nim
 import mummy, mummy/routers, waterpark/postgres, std/strutils
 
-let pool = newPostgresPool(3, "localhost", "pguser", "dietcoke", "test")
+let pg = newPostgresPool(3, "localhost", "pguser", "dietcoke", "test")
 
 proc indexHandler(request: Request) =
   var count: int
 
-  pool.withConnnection conn:
+  pg.withConnnection conn:
     count = parseInt(conn.getValue(sql"select count from table1 limit 1"))
 
   # ^ This is shorthand for:
-  # let conn = pool.borrow() # Take a Postgres connection from the pool
+  # let conn = pg.borrow() # Take a Postgres connection from the pool
   # try:
   #   count = parseInt(conn.getValue(sql"select count from table1 limit 1"))
   # finally:
-  #   pool.recycle(conn) # Return the Postgres connection to the pool
+  #   pg.recycle(conn) # Return the Postgres connection to the pool
 
   var headers: HttpHeaders
   headers["Content-Type"] = "text/plain"
