@@ -7,6 +7,8 @@ type SqlitePool* = object
 
 proc newSqlitePool*(size: int, database: string): SqlitePool =
   ## Creates a new thead-safe pool of SQLite database connections.
+  if size <= 0:
+    raise newException(CatchableError, "Invalid pool size")
   result.pool = newPool[DbConn]()
   for _ in 0 ..< size:
     result.pool.recycle(open(database, "", "", ""))

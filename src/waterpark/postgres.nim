@@ -9,6 +9,8 @@ proc newPostgresPool*(
   size: int, connection, user, password, database: string
 ): PostgresPool =
   ## Creates a new thead-safe pool of Postgres database connections.
+  if size <= 0:
+    raise newException(CatchableError, "Invalid pool size")
   result.pool = newPool[DbConn]()
   for _ in 0 ..< size:
     result.pool.recycle(open(connection, user, password, database))
