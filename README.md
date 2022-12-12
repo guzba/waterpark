@@ -55,6 +55,12 @@ server.serve(Port(8080))
 
 There are more examples in the examples/ directory of this repo.
 
+## Tips
+
+* When a new connection pool is created for Postgres, MySQL, SQLite etc, a size for the pool is given. That number of database connections is opened immediately. If this does not succeed, an exception is raised so you know right away. This ensures you know your server can talk to your database long before you begin listening for incoming requests.
+
+* When a thread wants to borrow from a pool, either that thread will receive a connection from the pool of available connections immediately or it will block until a connection is available. This means you don't need to worry about something causing runaway connections to be opened, potentially taking down your database server.
+
 ## Testing
 
 `nimble test`
