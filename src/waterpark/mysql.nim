@@ -5,6 +5,15 @@ export db_mysql, borrow, recycle, items
 type MySqlPool* = object
   pool: Pool[DbConn]
 
+proc close*(pool: MySqlPool) =
+  ## Closes the database connections in the pool then deallocates the pool.
+  ## All connections should be returned to the pool before it is closed.
+  let entries = toSeq(pool.pool.items)
+  for entry in entries:
+    entry.close()
+    pool.pool.delete(entry)
+  pool.pool.close()
+
 proc newMySqlPool*(
   size: int, connection, user, password, database: string
 ): MySqlPool =
@@ -12,8 +21,15 @@ proc newMySqlPool*(
   if size <= 0:
     raise newException(CatchableError, "Invalid pool size")
   result.pool = newPool[DbConn]()
-  for _ in 0 ..< size:
-    result.pool.recycle(open(connection, user, password, database))
+  try:
+    for _ in 0 ..< size:
+      result.pool.recycle(open(connection, user, password, database))
+  except DbError as e:
+    try:
+      result.close()
+    except:
+      discard
+    raise e
 
 proc borrow*(pool: MySqlPool): DbConn {.inline, raises: [], gcsafe.} =
   pool.pool.borrow()
@@ -24,16 +40,8 @@ proc recycle*(pool: MySqlPool, conn: DbConn) {.inline, raises: [], gcsafe.} =
 proc `==`(a, b: DbConn): bool =
   cast[pointer](a) == cast[pointer](b)
 
-proc close*(pool: MySqlPool) =
-  ## Closes the database connections in the pool then deallocates the pool.
-  ## All connections should be returned to the pool before it is closed.
-  let entries = toSeq(pool.pool.items)
-  for entry in entries:
-    entry.close()
-    pool.pool.delete(entry)
-  pool.pool.close()
 
-template borrowConn*(pool: MySqlPool, conn, body) =
+template withConnnection*(pool: MySqlPool, conn, body) =
   block:
     let conn = pool.borrow()
     try:

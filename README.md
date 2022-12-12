@@ -31,7 +31,7 @@ let pool = newPostgresPool(3, "localhost", "pguser", "dietcoke", "test")
 proc indexHandler(request: Request) =
   var count: int
 
-  pool.borrowConn conn:
+  pool.withConnnection conn:
     count = parseInt(conn.getValue(sql"select count from table1 limit 1"))
 
   # ^ This is shorthand for:
@@ -51,8 +51,9 @@ router.get("/", indexHandler)
 let server = newServer(router)
 echo "Serving on http://localhost:8080"
 server.serve(Port(8080))
-
 ```
+
+There are more examples in the examples/ directory of this repo.
 
 ## Testing
 
