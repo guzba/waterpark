@@ -15,5 +15,5 @@ jobs:
     - uses: jiro4989/setup-nim-action@v1
       with:
         nim-version: ${{ matrix.nim-version }}
-    - run: nimble test -y
+    - run: nimble test --mm:orc -y
     - run: nimble test --threads:on --mm:orc -y
