@@ -19,6 +19,8 @@ Adding more pools is planned, including for Redis etc.
 A great use-case for these thread-safe pools is for database connections when running
 a multithreaded HTTP server like [Mummy](https://github.com/guzba/mummy).
 
+Using Waterpark connection pools for multiple different databases is no a problem. You can create one or more pools for each database without any trouble. See [this example](https://github.com/guzba/waterpark/blob/master/examples/mummy_sqlite.nim) to get an idea of how this works.
+
 ## Example
 
 The following example shows a Postgres database connection pool being used in a Mummy HTTP request handler.
