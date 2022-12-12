@@ -2,13 +2,13 @@ import mummy, mummy/routers, waterpark/postgres, std/strutils
 
 ## This example demonstrates using a pool of Postgres connections to safely reuse
 ## connections in Mummy HTTP request handlers.
-
-# To run and use this example, you'd need to set up the matching Postgres user
-# and table. Kind of a pain. Fortunately, you don't necessarily need to
-# see how creating a Postgres pool works and how you can use it in an HTTP
-# request handler.
-
-# You can swap to `import waterpark/mysql` and `newMySqlPool` if using MySQL.
+##
+## To run and use this example, you'd need to set up the matching Postgres user
+## and table. Kind of a pain. Fortunately, you don't necessarily need to
+## see how creating a Postgres pool works and how you can use it in an HTTP
+## request handler.
+##
+## You can swap to `import waterpark/mysql` and `newMySqlPool` if using MySQL.
 
 let pool = newPostgresPool(3, "localhost", "pguser", "dietcoke", "test")
 
