@@ -1,7 +1,7 @@
 when not defined(gcArc) and not defined(gcOrc):
   {.error: "Using --mm:arc or --mm:orc is required by Waterpark.".}
 
-import std/locks
+import std/locks, std/random
 
 type
   Pool*[T] = ptr PoolObj[T]
@@ -10,6 +10,7 @@ type
     entries: seq[T]
     lock: Lock
     cond: Cond
+    r: Rand
 
 proc newPool*[T](): Pool[T] =
   ## Creates a new thread-safe pool.
@@ -18,6 +19,7 @@ proc newPool*[T](): Pool[T] =
   result = cast[Pool[T]](allocShared0(sizeof(PoolObj[T])))
   initLock(result.lock)
   initCond(result.cond)
+  result.r = initRand(2023)
 
 proc borrow*[T](pool: Pool[T]): T {.raises: [], gcsafe.} =
   ## Takes an entry from the pool. This call blocks until it can take
@@ -38,6 +40,7 @@ proc recycle*[T](pool: Pool[T], t: T) {.raises: [], gcsafe.} =
   withLock pool.lock:
     poolWasEmpty = pool.entries.len == 0
     pool.entries.add(t)
+    pool.r.shuffle(pool.entries)
   if poolWasEmpty:
     signal(pool.cond)
 
