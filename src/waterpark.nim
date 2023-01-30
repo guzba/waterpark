@@ -28,10 +28,7 @@ proc borrow*[T](pool: Pool[T]): T {.raises: [], gcsafe.} =
   acquire(pool.lock)
   while pool.entries.len == 0:
     wait(pool.cond, pool.lock)
-  try:
-    result = pool.entries.pop()
-  except KeyError:
-    discard # Not possible
+  result = pool.entries.pop()
   release(pool.lock)
 
 proc recycle*[T](pool: Pool[T], t: T) {.raises: [], gcsafe.} =
