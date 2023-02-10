@@ -33,13 +33,10 @@ proc borrow*[T](pool: Pool[T]): T {.raises: [], gcsafe.} =
 
 proc recycle*[T](pool: Pool[T], t: T) {.raises: [], gcsafe.} =
   ## Returns an entry to the pool.
-  var poolWasEmpty: bool
   withLock pool.lock:
-    poolWasEmpty = pool.entries.len == 0
     pool.entries.add(t)
     pool.r.shuffle(pool.entries)
-  if poolWasEmpty:
-    signal(pool.cond)
+  signal(pool.cond)
 
 proc delete*[T](pool: Pool[T], entry: T) {.raises: [], gcsafe.} =
   ## Removes the entry from the pool.
