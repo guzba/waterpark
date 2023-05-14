@@ -4,7 +4,7 @@
 
 ![Github Actions](https://github.com/guzba/waterpark/workflows/Github%20Actions/badge.svg)
 
-[API reference](https://nimdocs.com/guzba/waterpark)
+[API reference](https://guzba.github.io/waterpark/)
 
 Waterpark provides thread-safe object pools and a generic `Pool[T]` to create your own.
 
