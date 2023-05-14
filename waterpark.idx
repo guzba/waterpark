@@ -1,0 +1,7 @@
+Pool	waterpark.html#Pool	waterpark: Pool	
+newPool	waterpark.html#newPool	waterpark: newPool[T](): Pool[T]	
+borrow	waterpark.html#borrow,Pool[T]	waterpark: borrow[T](pool: Pool[T]): T	
+recycle	waterpark.html#recycle,Pool[T],T	waterpark: recycle[T](pool: Pool[T]; t: T)	
+delete	waterpark.html#delete,Pool[T],T	waterpark: delete[T](pool: Pool[T]; entry: T)	
+items	waterpark.html#items.i,Pool[T]	waterpark: items[T](pool: Pool[T]): T	
+close	waterpark.html#close,Pool[T]	waterpark: close[T](pool: Pool[T])	
