@@ -1,7 +1,8 @@
-Pool	waterpark.html#Pool	waterpark: Pool	
-newPool	waterpark.html#newPool	waterpark: newPool[T](): Pool[T]	
-borrow	waterpark.html#borrow,Pool[T]	waterpark: borrow[T](pool: Pool[T]): T	
-recycle	waterpark.html#recycle,Pool[T],T	waterpark: recycle[T](pool: Pool[T]; t: T)	
-delete	waterpark.html#delete,Pool[T],T	waterpark: delete[T](pool: Pool[T]; entry: T)	
-items	waterpark.html#items.i,Pool[T]	waterpark: items[T](pool: Pool[T]): T	
-close	waterpark.html#close,Pool[T]	waterpark: close[T](pool: Pool[T])	
+nimTitle	waterpark	waterpark.html	module src/waterpark		0
+nim	Pool	waterpark.html#Pool	type Pool		8
+nim	newPool	waterpark.html#newPool	proc newPool[T](): Pool[T]		16
+nim	borrow	waterpark.html#borrow,Pool[T]	proc borrow[T](pool: Pool[T]): T		25
+nim	recycle	waterpark.html#recycle,Pool[T],T	proc recycle[T](pool: Pool[T]; t: T)		35
+nim	delete	waterpark.html#delete,Pool[T],T	proc delete[T](pool: Pool[T]; entry: T)		42
+nim	items	waterpark.html#items.i,Pool[T]	iterator items[T](pool: Pool[T]): T		49
+nim	close	waterpark.html#close,Pool[T]	proc close[T](pool: Pool[T])		54
