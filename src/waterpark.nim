@@ -1,5 +1,6 @@
-when not defined(gcArc) and not defined(gcOrc):
-  {.error: "Using --mm:arc or --mm:orc is required by Waterpark.".}
+when (NimMajor, NimMinor, NimPatch) < (2, 0, 0):
+  when not defined(gcArc) and not defined(gcOrc):
+    {.error: "Using --mm:arc or --mm:orc is required by Waterpark.".}
 
 import std/locks, std/random
 
