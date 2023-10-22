@@ -1,4 +1,9 @@
-import ../waterpark, std/db_postgres, std/sequtils, std/locks
+import ../waterpark, std/sequtils, std/locks
+
+when (NimMajor, NimMinor, NimPatch) < (2, 0, 0):
+  import std/db_postgres
+else:
+  import db_connector/db_postgres
 
 export db_postgres, borrow, recycle, items
 

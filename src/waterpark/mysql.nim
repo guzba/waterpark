@@ -1,4 +1,9 @@
-import ../waterpark, std/db_mysql, std/sequtils, std/locks
+import ../waterpark, std/sequtils, std/locks
+
+when (NimMajor, NimMinor, NimPatch) < (2, 0, 0):
+  import std/db_mysql
+else:
+  import db_connector/db_mysql
 
 export db_mysql, borrow, recycle, items
 
