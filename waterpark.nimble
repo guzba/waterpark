@@ -6,4 +6,6 @@ license     = "MIT"
 srcDir = "src"
 
 requires "nim >= 1.6.8"
-requires "db_connector >= 0.1.0"
+
+when NimMajor >= 2:
+    requires "db_connector >= 0.1.0"
