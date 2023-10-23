@@ -1,4 +1,10 @@
-import ../waterpark, std/db_sqlite, std/sequtils
+import ../waterpark, std/sequtils
+
+when (NimMajor, NimMinor, NimPatch) < (2, 0, 0):
+  import std/db_sqlite
+else:
+  import db_connector/db_sqlite
+
 
 export db_sqlite, borrow, recycle, items
 
