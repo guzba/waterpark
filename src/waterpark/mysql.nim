@@ -45,7 +45,7 @@ proc borrow*(pool: MySqlPool): DbConn {.inline, raises: [], gcsafe.} =
 proc recycle*(pool: MySqlPool, conn: DbConn) {.inline, raises: [], gcsafe.} =
   pool.pool.recycle(conn)
 
-template withConnnection*(pool: MySqlPool, conn, body) =
+template withConnection*(pool: MySqlPool, conn, body) =
   block:
     let conn = pool.borrow()
     try:
