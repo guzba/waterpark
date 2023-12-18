@@ -42,7 +42,7 @@ proc borrow*(pool: PostgresPool): DbConn {.inline, raises: [], gcsafe.} =
 proc recycle*(pool: PostgresPool, conn: DbConn) {.inline, raises: [], gcsafe.} =
   pool.pool.recycle(conn)
 
-template withConnnection*(pool: PostgresPool, conn, body) =
+template withConnection*(pool: PostgresPool, conn, body) =
   block:
     let conn = pool.borrow()
     try:

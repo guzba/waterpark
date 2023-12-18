@@ -41,7 +41,7 @@ proc borrow*(pool: SqlitePool): DbConn {.inline, raises: [], gcsafe.} =
 proc recycle*(pool: SqlitePool, conn: DbConn) {.inline, raises: [], gcsafe.} =
   pool.pool.recycle(conn)
 
-template withConnnection*(pool: SqlitePool, conn, body) =
+template withConnection*(pool: SqlitePool, conn, body) =
   block:
     let conn = pool.borrow()
     try:

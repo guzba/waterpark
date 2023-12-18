@@ -15,7 +15,7 @@ let pg = newPostgresPool(3, "localhost", "pguser", "dietcoke", "test")
 proc indexHandler(request: Request) =
   var count: int
 
-  pg.withConnnection conn:
+  pg.withConnection conn:
     count = parseInt(conn.getValue(sql"select count from table1 limit 1"))
 
   # ^ This is shorthand for:

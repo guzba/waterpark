@@ -14,14 +14,14 @@ let
   writePool = newSqlitePool(1, "example.sqlite3")
 
 # For example purposes, set up a dummy table
-writePool.withConnnection conn:
+writePool.withConnection conn:
   conn.exec(sql"create table if not exists table1(id primary key, count int)")
   conn.exec(sql"insert or replace into table1 values (0, 0)")
 
 # A request to /get will return the count
 proc getHandler(request: Request) =
   var count: int
-  readPool.withConnnection reader:
+  readPool.withConnection reader:
     count = parseInt(reader.getValue(sql"select count from table1 limit 1"))
 
   # ^ This is shorthand for:
@@ -37,7 +37,7 @@ proc getHandler(request: Request) =
 
 # A request to /inc will increase the count by 1
 proc incHandler(request: Request) =
-  writePool.withConnnection writer:
+  writePool.withConnection writer:
     writer.exec(sql"update table1 set count = count + 1")
 
   var headers: HttpHeaders
