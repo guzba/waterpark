@@ -8,7 +8,7 @@ else:
 export db_postgres, borrow, recycle, items
 
 type PostgresPool* = object
-  pool*: Pool[DbConn]
+  pool: Pool[DbConn]
 
 proc close*(pool: PostgresPool) =
   ## Closes the database connections in the pool then deallocates the pool.
