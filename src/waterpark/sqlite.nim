@@ -5,7 +5,6 @@ when (NimMajor, NimMinor, NimPatch) < (2, 0, 0):
 else:
   import db_connector/db_sqlite
 
-
 export db_sqlite, borrow, recycle, items
 
 type SqlitePool* = object
@@ -22,8 +21,6 @@ proc close*(pool: SqlitePool) =
 
 proc newSqlitePool*(size: int, database: string): SqlitePool =
   ## Creates a new thead-safe pool of SQLite database connections.
-  if size <= 0:
-    raise newException(CatchableError, "Invalid pool size")
   result.pool = newPool[DbConn]()
   try:
     for _ in 0 ..< size:
