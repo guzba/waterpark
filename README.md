@@ -11,8 +11,8 @@ Waterpark provides thread-safe object pools and a generic `Pool[T]` to create yo
 Currently there are 3 built-in pools:
 
 * `import waterpark/postgres`
-* `import waterpart/mysql`
-* `import waterpart/sqlite`
+* `import waterpark/mysql`
+* `import waterpark/sqlite`
 
 Adding more pools is planned, including for Redis etc.
 
